@@ -11,6 +11,7 @@ const header = document.querySelector('.header');
 const navLinkElements = document.querySelectorAll('a.nav__link');
 const section_1 = document.querySelector('#section--1');
 const sectionElements = document.querySelectorAll('section.section');
+const navLinks = document.querySelector('.nav__links');
 
 const logo = document.getElementById('logo');
 const message = document.createElement('div');
@@ -124,3 +125,19 @@ const handleOperationsTabEvent = () => {
 };
 
 operationsTabContainer.addEventListener('click', handleOperationsTabEvent());
+
+const handleMouseNavLinks = (opacity, e) => {
+  if (e.target.classList.contains('nav__link')) {
+    const targetElement = e.target;
+    navLinks.querySelectorAll('.nav__link').forEach(element => {
+      if (element !== targetElement) {
+        element.style.opacity = opacity;
+      }
+    });
+    navLinks.closest('.nav').querySelector('img').style.opacity = opacity;
+  }
+};
+
+navLinks.addEventListener('mouseover', handleMouseNavLinks.bind(null, 0.5));
+
+navLinks.addEventListener('mouseout', handleMouseNavLinks.bind(null, 1));
