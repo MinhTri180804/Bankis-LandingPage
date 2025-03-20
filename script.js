@@ -92,19 +92,20 @@ const handleOperationsTabEvent = () => {
     );
 
     if (
-      currentElementContentActive === elementContentActive &&
-      currentElementTabActive === elementTabActive
-    )
-      return;
-
-    if (
-      currentElementTabActive !== null ||
+      currentElementTabActive !== null &&
       currentElementContentActive !== null
     ) {
-      currentElementContentActive.classList.remove(
-        'operations__content--active',
-      );
-      currentElementTabActive.classList.remove('operations__tab--active');
+      if (
+        currentElementContentActive === elementContentActive &&
+        currentElementTabActive === elementTabActive
+      )
+        return;
+      else {
+        currentElementContentActive.classList.remove(
+          'operations__content--active',
+        );
+        currentElementTabActive.classList.remove('operations__tab--active');
+      }
     } else {
       parentOperations
         .querySelector('.operations__tab--active')
@@ -119,12 +120,7 @@ const handleOperationsTabEvent = () => {
 
     currentElementTabActive = elementTabActive;
     currentElementContentActive = elementContentActive;
-
-    console.log(1);
   };
 };
 
-operationsTabContainer.addEventListener(
-  'click',
-  handleOperationsTabEvent.call(),
-);
+operationsTabContainer.addEventListener('click', handleOperationsTabEvent());
