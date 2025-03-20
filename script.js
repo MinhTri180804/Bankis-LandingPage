@@ -66,3 +66,65 @@ document.querySelector('.nav__links').addEventListener('click', e => {
       .scrollIntoView({ behavior: 'smooth' });
   }
 });
+
+const operationsTabContainer = document.querySelector(
+  '.operations__tab-container',
+);
+
+const handleOperationsTabEvent = () => {
+  let currentElementTabActive = null;
+  let currentElementContentActive = null;
+
+  return event => {
+    event.preventDefault();
+    const targetElement = event.target.closest('.operations__tab');
+    if (!targetElement) return;
+    const dataTab = targetElement.dataset.tab;
+    if (!dataTab) return console.error('Element not have data-tab');
+
+    const parentOperations = targetElement.closest('.operations');
+
+    const elementTabActive = parentOperations.querySelector(
+      `.operations__tab--${dataTab}`,
+    );
+    const elementContentActive = parentOperations.querySelector(
+      `.operations__content--${dataTab}`,
+    );
+
+    if (
+      currentElementContentActive === elementContentActive &&
+      currentElementTabActive === elementTabActive
+    )
+      return;
+
+    if (
+      currentElementTabActive !== null ||
+      currentElementContentActive !== null
+    ) {
+      currentElementContentActive.classList.remove(
+        'operations__content--active',
+      );
+      currentElementTabActive.classList.remove('operations__tab--active');
+    } else {
+      parentOperations
+        .querySelector('.operations__tab--active')
+        .classList.remove('operations__tab--active');
+      parentOperations
+        .querySelector('.operations__content--active')
+        .classList.remove('operations__content--active');
+    }
+
+    elementTabActive.classList.add('operations__tab--active');
+    elementContentActive.classList.add('operations__content--active');
+
+    currentElementTabActive = elementTabActive;
+    currentElementContentActive = elementContentActive;
+
+    console.log(1);
+  };
+};
+
+operationsTabContainer.addEventListener(
+  'click',
+  handleOperationsTabEvent.call(),
+);
