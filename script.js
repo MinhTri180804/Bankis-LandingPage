@@ -12,6 +12,9 @@ const navLinkElements = document.querySelectorAll('a.nav__link');
 const section_1 = document.querySelector('#section--1');
 const sectionElements = document.querySelectorAll('section.section');
 const navLinks = document.querySelector('.nav__links');
+const nav = document.querySelector('nav.nav');
+const navPlaceholder = document.querySelector('.nav--placeholder');
+const allFeaturesImage = document.querySelectorAll('img.features__img');
 
 const logo = document.getElementById('logo');
 const message = document.createElement('div');
@@ -56,11 +59,11 @@ window.addEventListener('load', () => {
   }
 });
 
-document.querySelector('.nav__links').addEventListener('click', e => {
+navLinks.addEventListener('click', e => {
   e.preventDefault();
   const targetElement = e.target;
   if (e.target.classList.contains('nav__link')) {
-    const idElementScrollTo = targetElement.getAttribute('href');
+    const idElementScrollTo = targetElement.getAttribute('href').trim();
     history.pushState(null, null, idElementScrollTo);
     document
       .querySelector(idElementScrollTo)
@@ -68,6 +71,7 @@ document.querySelector('.nav__links').addEventListener('click', e => {
   }
 });
 
+// Handle operations tab event
 const operationsTabContainer = document.querySelector(
   '.operations__tab-container',
 );
@@ -126,6 +130,7 @@ const handleOperationsTabEvent = () => {
 
 operationsTabContainer.addEventListener('click', handleOperationsTabEvent());
 
+// Handle mouse nav link
 const handleMouseNavLinks = (opacity, e) => {
   if (e.target.classList.contains('nav__link')) {
     const targetElement = e.target;
@@ -141,3 +146,68 @@ const handleMouseNavLinks = (opacity, e) => {
 navLinks.addEventListener('mouseover', handleMouseNavLinks.bind(null, 0.5));
 
 navLinks.addEventListener('mouseout', handleMouseNavLinks.bind(null, 1));
+
+// Handle sticky navbar
+const stickyNav = entries => {
+  const [entry] = entries;
+  if (!entry.isIntersecting) {
+    nav.classList.add('sticky');
+  } else {
+    nav.classList.remove('sticky');
+  }
+};
+
+const stickyNavOptions = {
+  root: null,
+  threshold: [0, 1],
+  rootMargin: `${nav.getBoundingClientRect().height}px`,
+};
+
+const navStickyObserver = new IntersectionObserver(stickyNav, stickyNavOptions);
+navStickyObserver.observe(navPlaceholder);
+
+// Handle animation display section for scroll event
+const displaySections = (entries, observer) => {
+  const [entry] = entries;
+
+  if (!entry.isIntersecting) return;
+
+  console.log(entry.target);
+  entry.target.classList.remove('section--hidden');
+  observer.unobserve(entry.target);
+};
+
+const displaySectionOptions = {
+  root: null,
+  threshold: 0.2,
+};
+
+const displaySectionObserver = new IntersectionObserver(
+  displaySections,
+  displaySectionOptions,
+);
+sectionElements.forEach(section => displaySectionObserver.observe(section));
+
+// Handle lazy loading image features
+
+const imageFeaturesLazy = (entries, observer) => {
+  const [entry] = entries;
+
+  if (!entry.isIntersecting) return;
+
+  const targetElement = entry.target;
+  targetElement.src = targetElement.dataset.src;
+  targetElement.addEventListener('load', () => {
+    targetElement.classList.remove('lazy-img');
+  });
+  observer.unobserve(targetElement);
+};
+
+const imageFeaturesObserver = new IntersectionObserver(imageFeaturesLazy, {
+  root: null,
+  threshold: 0.3,
+});
+
+allFeaturesImage.forEach(featuresImage =>
+  imageFeaturesObserver.observe(featuresImage),
+);

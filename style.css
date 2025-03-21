@@ -39,8 +39,8 @@ body {
   border-top: 1px solid #ddd;
 
   transition:
-    transform 20s,
-    opacity 20s;
+    transform 1s,
+    opacity 1s;
 }
 
 .section--hidden {
@@ -124,6 +124,9 @@ img {
   width: 100%;
   padding: 0 6rem;
   z-index: 100;
+  transition:
+    opacity 0.5s,
+    background-color 0.3s;
 }
 
 /* nav and stickly class at the same time */
